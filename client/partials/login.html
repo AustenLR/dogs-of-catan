@@ -1,0 +1,13 @@
+<form action="javascript:void(0)" ng-submit="login(inputs)">
+  Email: <input type="text" ng-model="inputs.email">
+  Password: <input type="text" ng-model="inputs.password">
+
+  <br><br>
+
+  <button>Login</button>
+
+  <br><br>
+
+  <p ng-if="message">Message: <strong>{{ message }}</strong></p>
+  <p ng-if="error">Error: <strong>{{ error }}</strong></p>
+</form>
