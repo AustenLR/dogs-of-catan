@@ -258,26 +258,32 @@ function CardService($firebaseObject) {
   }
 
   
-  function swapAllCards(fromCardsRef, toCardsRef, totalCost) {
+  function swapAllCards(fromObj, toObj, totalCost) {
+    debugger
     for (var type in totalCost) {
       var count = totalCost[type];
-      swapCards(fromCardsRef, toCardsRef, type, count);
+      fromObj[type] -= count;
+      toObj[type] += count;
+      debugger
+      // swapCards(fromCardsRef, toCardsRef, type, count);
     }
 
-    function swapCards(fromCardsRef, toCardsRef, type, count) {
-      var fromObj = $firebaseObject(fromCardsRef.child(type));
-      var toObj = $firebaseObject(toCardsRef.child(type));
+    // function swapCards(fromCardsRef, toCardsRef, type, count) {
+    //   var fromObj = $firebaseObject(fromCardsRef.child(type));
+    //   var toObj = $firebaseObject(toCardsRef.child(type));
 
-      fromObj.$loaded().then(function (fromCard) {
-        fromCard.$value -= count;
-        fromCard.$save();
-      });
+    //   fromObj.$loaded().then(function (fromCard) {
+    //     debugger
+    //     fromCard.$value -= count;
+    //     fromCard.$save();
+    //   });
 
-      toObj.$loaded().then(function (toCard) {
-        toCard.$value += count;
-        toCard.$save();
-      });
-    }
+    //   toObj.$loaded().then(function (toCard) {
+    //     debugger
+    //     toCard.$value += count;
+    //     toCard.$save();
+    //   });
+    // }
   }
 
   
@@ -303,15 +309,18 @@ function BuildService(CardService) {
 
 
   function settlementCheck(intIndex, intObj, players, username) {
-    return BuildService.intersectionEmpty(players, intIndex) &&
-      BuildService.adjacentRoad(intObj, username) &&
-      BuildService.distanceRuleMet(players, intObj);
+    return this.intersectionEmpty(players, intIndex) &&
+      this.adjacentRoad(intObj, username) &&
+      this.distanceRuleMet(players, intObj);
   }
 
   function intersectionEmpty(players, intIndex) {
     for (var player in players) {
-      var intsOwned = Object.keys(players[player].intersectionsOwned);
-      if (intsOwned.indexOf(intIndex) > -1) return false;
+      var intsOwned = players[player].intersectionsOwned;
+      if (intsOwned) {
+        intsOwned = Object.keys(intsOwned);
+        if (intsOwned.indexOf(intIndex) > -1) return false;
+      }
     }
     return true;
   }
@@ -323,10 +332,14 @@ function BuildService(CardService) {
     return false;
   }
 
-  function distanceRuleMet(players, intObj) {
+  function distanceRuleMet(players, intObj) { 
     var owned = [];
     for (var player in players) {
-      owned = owned.concat(Object.keys(players[player].intersectionsOwned));
+      var intsOwned = players[player].intersectionsOwned;
+      if (intsOwned) {
+        intsOwned = Object.keys(intsOwned);
+        owned = owned.concat(intsOwned);
+      }
     }
     for (var intersection in intObj.roads) {
       if (owned.indexOf(intersection) > -1) return false;

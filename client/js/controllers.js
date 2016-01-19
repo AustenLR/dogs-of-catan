@@ -123,7 +123,7 @@ function GameCtrl($scope, $location, GameFactory, GameService,
     // withBank: tradeWithBank
   };
 
-  GameFactory(game.$id).$bindTo($scope, "game");
+  $scope.game = game;
   $scope.channel = game.name;
   $scope.roomMessages = roomMessages;
   $scope.mainMessages = mainMessages;
@@ -156,14 +156,22 @@ debugger
   // BUILD
   function buildSettlement(intIndex) {
     var username = currentUser.username;
-    var bank = $scope.game.bank.res;
-    var players = $scope.game.players;
-    var intObj = $scope.game.intersections[intIndex];
+    var bankRes = game.bank.res;
+    var players = game.players;
+    var intObj = game.intersections[intIndex];
     var playerRes = CardService.getPlayerRes(players, username);
     var cardCost = CardService.cardCostMet(playerRes, "settlement");
-    if (cardCost && BuildService.settlementCheck(intIndex, intObj, players, username))
+    var settlementCheck = BuildService.settlementCheck(intIndex, intObj, players, username);
+    debugger
+    if (cardCost && settlementCheck)
     {
-      CardService.swapAllCards(bank, playerRes, cardCost);
+      debugger
+      CardService.swapAllCards(bankRes, playerRes, cardCost);
+      console.log("bank: ", game.bank);
+      console.log("player: ", game.players.a.cards.res);
+      game.$save();
+      $scope.success = "built settlement correctly";
+
     }
     else
     {
