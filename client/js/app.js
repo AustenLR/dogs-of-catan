@@ -17,8 +17,8 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider){
       games : function (GameService) {
         return GameService.getAllGames();
       },
-      currentUser : function(UserService) {
-        return UserService.getCurrentUser();
+      currentUser : function(AuthService) {
+        return AuthService.getCurrentUser();
       }
     }
   })
@@ -29,8 +29,8 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider){
       game: function(GameService, $route){
         return GameService.getGame($route.current.params.id);
       },
-      currentUser: function(UserService) {
-        return UserService.getCurrentUser();
+      currentUser: function(AuthService) {
+        return AuthService.getCurrentUser();
       },
       messages: function(MessageService, $route){
         return MessageService.getAllMessages($route.current.params.id);
