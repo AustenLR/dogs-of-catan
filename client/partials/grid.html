@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>blah</title>
+  <style>
+
+    .tileRows {
+      border: 1px solid black;
+      height: 173px;
+      color: red;
+      vertical-align: middle;
+      position: relative;
+    }
+
+    .evenRows {
+      padding-left: 50px;
+    }
+
+    .tileCenters {
+      width: 200px;
+      height: 200px;
+      border: 1px solid black;
+      display: inline-block;
+      vertical-align: middle;
+      border-radius: 100%;
+    }
+
+    .tileCenters p {
+      vertical-align: middle;
+    }
+    .tileInvis {
+
+    }
+
+
+
+    .intCentersL {
+      padding-right: 50px;
+      display: inline-block;
+    }
+
+    .intCentersR {
+      padding-left: 50px;
+      display: inline-block;  
+    }
+
+
+
+  </style>
+</head>
+<body>
+  
+  <div class="tileRows">
+    
+    <div class="tileCenters tileInvis">invis</div>
+    <div class="intCentersL">i8</div>
+    <div class="intCentersR">i18</div>
+    <div class="tileCenters"><p>t7<p></div>
+    <div class="intCentersL">i29</div>
+    <div class="intCentersR">i39</div>
+    <div class="tileCenters tileInvis">invis</div>
+
+  </div>
+
+  <div class="tileRows evenRows">
+    
+    <div class="intCentersL">i0</div>
+    <div class="intCentersR">i9</div>
+    <div class="tileCenters">t3</div>
+    <div class="intCentersL">i19</div>
+    <div class="intCentersR">i30</div>
+    <div class="tileCenters">t12</div>
+    <div class="intCentersL">i40</div>
+    <div class="intCentersR">i48</div>
+
+  </div>
+
+</body>
+</html>
+
+

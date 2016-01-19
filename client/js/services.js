@@ -44,7 +44,9 @@ function AuthService(firebaseRootService, $firebaseAuth, $firebaseObject) {
     signup: signup,
     createUser: createUser,
     login: login,
-    logout: logout
+    logout: logout,
+    setCurrentUser: setCurrentUser,
+    getCurrentUser: getCurrentUser
   };
 
   return service;
@@ -146,3 +148,4 @@ function MessageService(firebaseRootService, $firebaseArray, UserService) {
     return $firebaseArray(query).$loaded();
   }
 }
+
