@@ -1,4 +1,4 @@
-var app = angular.module("ttt app", ["firebase", "ngRoute"]);
+var app = angular.module("dogs-of-catan", ["firebase", "ngRoute"]);
 
 app.config(function ($routeProvider, $locationProvider, $httpProvider){
   $routeProvider
@@ -37,6 +37,7 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider){
       }
     }
   });
+  
   $locationProvider.html5Mode(true);
 });
   

@@ -1,11 +1,14 @@
 <ul>
   <li ng-repeat="game in games">
-    <div>Name: {{game.name}}; Number of Players:{{Object.keys(game.users).length || "NOT WORKING, MAYBE 0"}}</div> 
-    <button ng-click="joinGame(game.$id, currentUser)">Join {{game.name}}</button>
+    <div>
+      Game: {{game.name}}
+      Players: {{game.length}}
+      <button ng-click="joinGame(game.$id)">Join {{game.name}}</button>
+    </div> 
   </li>
 </ul>
 
-<form action="javascript:void(0)" ng-submit="createGame(name, currentUser)">
+<form action="javascript:void(0)" ng-submit="createGame(name)">
   Game Name <input type="text" ng-model="name">
   <button>Create New Game</button>
 </form>
