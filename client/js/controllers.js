@@ -4,33 +4,36 @@ app.controller('GamesCtrl', GamesCtrl);
 app.controller('GameCtrl', GameCtrl);
 
 AuthCtrl.$inject = [
-"$scope", 
-"$location", 
+"$scope",
+"$location",
 "AuthService"
 ];
 
 LoginCtrl.$inject = [
-"$scope", 
-"$location", 
+"$scope",
+"$location",
 "AuthService"
 ];
 
 GamesCtrl.$inject = [
-"$scope", 
-"$location", 
-"GameService", 
-"MessageService", 
-"games", 
-"mainMessages", 
+"$scope",
+"$location",
+"GamesService",
+"MessageService",
+"games",
+"mainMessages",
 "currentUser"
 ];
 
 GameCtrl.$inject = [
-"$scope", 
-"$location", 
-"GameService", 
-"MessageService", 
-"game", 
+"$scope",
+"$location",
+"GameFactory",
+"GameService",
+"MessageService",
+"BuildService",
+"CardService",
+"game",
 "roomMessages",
 "mainMessages",
 "currentUser"
@@ -76,7 +79,9 @@ function LoginCtrl($scope, $location, AuthService) {
   };
 }
 
-function GamesCtrl($scope, $location, GameService, MessageService, games, mainMessages, currentUser) {
+function GamesCtrl($scope, $location, GamesService, MessageService,
+  games, mainMessages, currentUser) {
+
   $scope.games = games;
   $scope.mainMessages = mainMessages;
   $scope.currentUser = currentUser;
@@ -85,15 +90,15 @@ function GamesCtrl($scope, $location, GameService, MessageService, games, mainMe
   $scope.createMessage = createMessage;
   
   function createGame(name) {
-    GameService.createGame(name) //returns a promise
+    GamesService.createGame(name) //returns a promise
     .then(function (game) {
-      GameService.joinGame(game.key()); //resolving the promise then updating the database to joining that game
+      GamesService.joinGame(game.key()); //resolving the promise then updating the database to joining that game
       $location.path("/games/"+game.key()); //redirecting the game
     });
   }
 
   function joinGame(gameKey) {
-    GameService.joinGame(gameKey);
+    GamesService.joinGame(gameKey);
     $location.path("/games/"+gameKey);
   }
 
@@ -103,12 +108,22 @@ function GamesCtrl($scope, $location, GameService, MessageService, games, mainMe
   }
 }
 
-function GameCtrl($scope, $location, GameService, MessageService, game, roomMessages, mainMessages, currentUser) {
-  build = {
+function GameCtrl($scope, $location, GameFactory, GameService,
+  MessageService, BuildService, CardService, game, roomMessages,
+  mainMessages, currentUser) {
 
+  var build = {
+    settlement: buildSettlement,
+    // city: buildCity,
+    // road: buildRoad
   };
 
-  $scope.game = game;
+  var trade = {
+    // withPlayer: tradeWithPlayer,
+    // withBank: tradeWithBank
+  };
+
+  GameFactory(game.$id).$bindTo($scope, "game");
   $scope.channel = game.name;
   $scope.roomMessages = roomMessages;
   $scope.mainMessages = mainMessages;
@@ -117,6 +132,9 @@ function GameCtrl($scope, $location, GameService, MessageService, game, roomMess
   $scope.startGame = startGame;
   $scope.leaveGame = leaveGame;
   $scope.createMessage = createMessage;
+  $scope.build = build;
+  $scope.trade = trade;
+debugger
 
   function startGame() {
     $scope.gameStarted = true;
@@ -134,4 +152,24 @@ function GameCtrl($scope, $location, GameService, MessageService, game, roomMess
     $scope.message = null;
   }
 
+
+  // BUILD
+  function buildSettlement(intIndex) {
+    var username = currentUser.username;
+    var bank = $scope.game.bank.res;
+    var players = $scope.game.players;
+    var intObj = $scope.game.intersections[intIndex];
+    var playerRes = CardService.getPlayerRes(players, username);
+    var cardCost = CardService.cardCostMet(playerRes, "settlement");
+    if (cardCost && BuildService.settlementCheck(intIndex, intObj, players, username))
+    {
+      CardService.swapAllCards(bank, playerRes, cardCost);
+    }
+    else
+    {
+      $scope.error = "Cannot build at that intersection";
+    }
+  }
+
+  // TRADE
 }

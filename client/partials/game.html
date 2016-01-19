@@ -1,6 +1,7 @@
-<h1> This is a board</h1>
-<h1>{{game.name}}</h1>
-<h2>Number of players: {{game.length}}</h2>
+<h1>This is the game board</h1>
+<p ng-show="error">Error: <strong>{{ error }}</strong></p>
+<h1>Game: {{game.name}}</h1>
+<h2>Number of Players: {{game.length}}</h2>
 
 <ul>
   <li ng-repeat="(key, value) in game.players">
@@ -8,8 +9,10 @@
   </li>
 </ul>
 
-<button ng-show="currentUser.username === game.owner"
-  ng-click="StartGame()">
+<br>
+
+<button ng-show="currentUser.username === game.owner && !gameStarted"
+  ng-click="startGame()">
   Start Game
 </button>
 
@@ -17,7 +20,7 @@
 
 <br>
 
-<button ng-click="channel = game.name">Game</button>
+<button ng-click="channel = game.name">{{game.name}}</button>
 <button ng-click="channel = 'main'">Main</button>
 <ul ng-hide="channel === 'main'">
   <li ng-repeat="messageObj in roomMessages">

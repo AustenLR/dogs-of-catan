@@ -14,8 +14,8 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider) {
     templateUrl: "partials/games.html",
     controller: "GamesCtrl",
     resolve: {
-      games : function (GameService) {
-        return GameService.getAllGames();
+      games : function (GamesService) {
+        return GamesService.getAllGames();
       },
       mainMessages: function(MessageService) {
         return MessageService.getMainMessages();
