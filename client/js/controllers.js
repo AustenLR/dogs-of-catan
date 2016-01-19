@@ -19,7 +19,9 @@ GamesCtrl.$inject = [
 "$scope", 
 "$location", 
 "GameService", 
+"MessageService", 
 "games", 
+"mainMessages", 
 "currentUser"
 ];
 
@@ -29,7 +31,8 @@ GameCtrl.$inject = [
 "GameService", 
 "MessageService", 
 "game", 
-"messages", 
+"roomMessages",
+"mainMessages",
 "currentUser"
 ];
 
@@ -73,39 +76,62 @@ function LoginCtrl($scope, $location, AuthService) {
   };
 }
 
-function GamesCtrl($scope, $location, GameService, games, currentUser) {
+function GamesCtrl($scope, $location, GameService, MessageService, games, mainMessages, currentUser) {
   $scope.games = games;
+  $scope.mainMessages = mainMessages;
   $scope.currentUser = currentUser;
-  $scope.joinGame = function (gameKey) {
-    GameService.joinGame(gameKey);
-    $location.path("/games/"+gameKey);
-  };
-  $scope.createGame = function(name) {
+  $scope.joinGame = joinGame;
+  $scope.createGame = createGame;
+  $scope.createMessage = createMessage;
+  
+  function createGame(name) {
     GameService.createGame(name) //returns a promise
     .then(function (game) {
       GameService.joinGame(game.key()); //resolving the promise then updating the database to joining that game
       $location.path("/games/"+game.key()); //redirecting the game
     });
-  };
+  }
+
+  function joinGame(gameKey) {
+    GameService.joinGame(gameKey);
+    $location.path("/games/"+gameKey);
+  }
+
+  function createMessage(message) {
+    MessageService.createMessage(null, currentUser, message, 'main');
+    $scope.message = null;
+  }
 }
 
-function GameCtrl($scope, $location, GameService, MessageService, game, messages, currentUser) {
+function GameCtrl($scope, $location, GameService, MessageService, game, roomMessages, mainMessages, currentUser) {
   build = {
 
   };
 
   $scope.game = game;
-  $scope.messages = messages;
-  $scope.createMessage = createMessage;
+  $scope.channel = game.name;
+  $scope.roomMessages = roomMessages;
+  $scope.mainMessages = mainMessages;
+  $scope.currentUser = currentUser;
+  $scope.gameStarted = false;
+  $scope.startGame = startGame;
   $scope.leaveGame = leaveGame;
+  $scope.createMessage = createMessage;
 
-  function createMessage(message) {
-    MessageService.createMessage(game.$id, currentUser, message);
+  function startGame() {
+    $scope.gameStarted = true;
+    // fill in grid
+    // start game
   }
 
   function leaveGame() {
     GameService.leaveGame(game.$id, currentUser);
     $location.path("/games");
+  }
+
+  function createMessage(message, channel) {
+    MessageService.createMessage(game.$id, currentUser, message, channel);
+    $scope.message = null;
   }
 
 }

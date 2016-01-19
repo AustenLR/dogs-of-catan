@@ -8,17 +8,33 @@
   </li>
 </ul>
 
+<button ng-show="currentUser.username === game.owner"
+  ng-click="StartGame()">
+  Start Game
+</button>
+
 <button ng-click="leaveGame()">Leave Game</button>
 
-<ul>
-  <li ng-repeat="messageObj in messages">
+<br>
+
+<button ng-click="channel = game.name">Game</button>
+<button ng-click="channel = 'main'">Main</button>
+<ul ng-hide="channel === 'main'">
+  <li ng-repeat="messageObj in roomMessages">
+    {{messageObj.sender}}: {{messageObj.message}}
+  </li>
+</ul>
+<ul ng-show="channel === 'main'">
+  <li ng-repeat="messageObj in mainMessages">
     {{messageObj.sender}}: {{messageObj.message}}
   </li>
 </ul>
 
-<form action="javascript:void(0)" ng-submit="createMessage(message)">
+<form action="javascript:void(0)" ng-submit="createMessage(message, channel)">
   <input type="text" ng-model="message">
   <button>Send Message</button>
 </form>
 
+
 <!-- $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight; -->
+<!-- use for auto scrolling later -->

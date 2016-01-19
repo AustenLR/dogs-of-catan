@@ -90,33 +90,39 @@ function AuthService(firebaseRootService, $firebaseAuth, $firebaseObject, $windo
 
 // MESSAGE SERVICE
 function MessageService(firebaseRootService, $firebaseArray, AuthService) {
-  var messagesRef = firebaseRootService.messages;
+  var roomMessagesRef = firebaseRootService.messages;
   var currentUser = AuthService.getCurrentUser();
+  var MESSAGE_LIMIT = 25;
 
   var service = {
     createMessage: createMessage,
-    getAllMessages: getAllMessages
+    getRoomMessages: getRoomMessages,
+    getMainMessages: getMainMessages
   };
 
   return service;
 
 
 
-  function createMessage(gameKey, currentUser, message) {
-    var firebaseMessagesArray = $firebaseArray(messagesRef.child(gameKey));
-
+  function createMessage(gameKey, currentUser, message, channel) {
+    var messagesRef = roomMessagesRef.child((channel === "main") ? "main" : gameKey);
+    var firebaseMessagesArray = $firebaseArray(messagesRef);
+    
     var newMessage = {};
     newMessage.sender = currentUser.username;
     newMessage.message = message;
-    firebaseMessagesArray.$loaded()
-    .then(function(messageArr) {
-      messageArr.$add(newMessage);
-    });
+    firebaseMessagesArray.$add(newMessage);
   }
 
-  function getAllMessages(gameKey) {
-    var messageRef = messagesRef.child(gameKey);
-    var query = messageRef.limitToLast(25);
+  function getRoomMessages(gameKey) {
+    var messageRef = roomMessagesRef.child(gameKey);
+    var query = messageRef.limitToLast(MESSAGE_LIMIT);
+    return $firebaseArray(query).$loaded();
+  }
+
+  function getMainMessages() {
+    var messageRef = roomMessagesRef.child("main");
+    var query = messageRef.limitToLast(MESSAGE_LIMIT);
     return $firebaseArray(query).$loaded();
   }
 }

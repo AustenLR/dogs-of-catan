@@ -1,3 +1,8 @@
+<form action="javascript:void(0)" ng-submit="createGame(name)">
+  Game Name <input type="text" ng-model="name">
+  <button>Create New Game</button>
+</form>
+
 <ul>
   <li ng-repeat="game in games">
     <div>
@@ -8,7 +13,14 @@
   </li>
 </ul>
 
-<form action="javascript:void(0)" ng-submit="createGame(name)">
-  Game Name <input type="text" ng-model="name">
-  <button>Create New Game</button>
+
+<ul>
+  <li ng-repeat="messageObj in mainMessages">
+    {{messageObj.sender}}: {{messageObj.message}}
+  </li>
+</ul>
+
+<form action="javascript:void(0)" ng-submit="createMessage(message)">
+  <input type="text" ng-model="message">
+  <button>Send Message</button>
 </form>

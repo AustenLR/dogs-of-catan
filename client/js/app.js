@@ -1,6 +1,6 @@
 var app = angular.module("dogs-of-catan", ["firebase", "ngRoute"]);
 
-app.config(function ($routeProvider, $locationProvider, $httpProvider){
+app.config(function ($routeProvider, $locationProvider, $httpProvider) {
   $routeProvider
   .when("/signup",{
     templateUrl: "partials/signup.html",
@@ -17,6 +17,9 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider){
       games : function (GameService) {
         return GameService.getAllGames();
       },
+      mainMessages: function(MessageService) {
+        return MessageService.getMainMessages();
+      },
       currentUser : function(AuthService) {
         return AuthService.getCurrentUser();
       }
@@ -26,14 +29,17 @@ app.config(function ($routeProvider, $locationProvider, $httpProvider){
     templateUrl: "partials/game.html",
     controller: "GameCtrl",
     resolve:{
-      game: function(GameService, $route){
+      game: function(GameService, $route) {
         return GameService.getGame($route.current.params.id);
       },
       currentUser: function(AuthService) {
         return AuthService.getCurrentUser();
       },
-      messages: function(MessageService, $route){
-        return MessageService.getAllMessages($route.current.params.id);
+      roomMessages: function(MessageService, $route) {
+        return MessageService.getRoomMessages($route.current.params.id);
+      },
+      mainMessages: function(MessageService) {
+        return MessageService.getMainMessages();
       }
     }
   });
