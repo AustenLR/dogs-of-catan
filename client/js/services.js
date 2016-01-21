@@ -293,6 +293,7 @@ function BuildService(CardService, PtsAndStructsService) {
   var service = {
     structureCheck: structureCheck,
     settlementCheck: settlementCheck,
+    roadCheck: roadCheck,
     intersectionEmpty: intersectionEmpty,
     adjacentRoad: adjacentRoad,
     distanceRuleMet: distanceRuleMet,
@@ -311,6 +312,11 @@ function BuildService(CardService, PtsAndStructsService) {
       this.distanceRuleMet(players, intObj);
   }
 
+  function roadCheck(intIndex1, intIndex2, intObj1, intObj2, players, username) {
+    return (this.adjacentRoad(intObj1, username) || this.adjacentRoad(intObj2, username)) &&
+      roadEmpty(intIndex2, intObj1);
+  }
+
   function intersectionEmpty(players, intIndex) {
     for (var player in players) {
       var intsOwned = players[player].intersectionsOwned;
@@ -320,6 +326,10 @@ function BuildService(CardService, PtsAndStructsService) {
       }
     }
     return true;
+  }
+
+  function roadEmpty(intIndex2, intObj1) {
+    return !intObj1.roads[intIndex2];
   }
   
   function adjacentRoad(intObj, username) {
@@ -352,14 +362,15 @@ function PtsAndStructsService() {
 
   var service = {
     updateTilesAndIntsOwned: updateTilesAndIntsOwned,
+    updateRoads: updateRoads,
     checkForWin: checkForWin
   };
 
   return service;
 
 
+  // update players, tiles, ints, roads, points, etc. after building settlements, cities, and roads
   function updateTilesAndIntsOwned(tiles, intIndex, username, players, structure) {  // settlements and cities only
-    debugger
     if (structure === "settlement")
     {
       for (var tileKey in tiles) {
@@ -383,7 +394,11 @@ function PtsAndStructsService() {
     }
   }
 
-  
+  function updateRoads(intIndex1, intIndex2, intObj1, intObj2, players, username) {
+    intObj1.roads[intIndex2] = username;
+    intObj2.roads[intIndex1] = username;
+    players[username].road -= 1;
+  }
 
   function checkForWin(players, username) {
     return players[username].points >= 10;

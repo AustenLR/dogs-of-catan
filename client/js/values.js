@@ -305,7 +305,7 @@ var newGame = {
     "i0": {
       "trade ratio": false, 
       "roads": {
-        "i1": false, 
+        "i1": false,  // playerKey upon building a road; MUST ALSO UPDATE i1.i0
         "i9": false,
       },
     },

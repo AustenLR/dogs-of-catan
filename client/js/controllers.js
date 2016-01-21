@@ -116,7 +116,7 @@ function GameCtrl($scope, $location, GameFactory, GameService,
   var build = {
     settlement: buildSettlement,
     // city: buildCity,
-    // road: buildRoad
+    road: buildRoad
   };
 
   var trade = {
@@ -186,6 +186,37 @@ debugger
     else
     {
       $scope.error = "Not enough resources or settlements";
+    }
+  }
+
+  function buildRoad(intIndex1, intIndex2) {
+    var username = currentUser.username;
+    var ints = game.intersections;
+    var players = game.players;
+    var bankRes = game.bank.res;
+    var intObj1 = game.intersections[intIndex1];
+    var intObj2 = game.intersections[intIndex2];
+    var playerRes = CardService.getPlayerRes(players, username);
+    var cardCost = CardService.cardCostMet(playerRes, "road");
+    var enoughRoads = BuildService.structureCheck(players[username], "road");
+
+    if (cardCost && enoughRoads)
+    {
+      if (BuildService.roadCheck(intIndex1, intIndex2, intObj1, intObj2, players, username))
+      {
+        CardService.swapAllCards(playerRes, bankRes, cardCost);
+        PtsAndStructsService.updateRoads(intIndex1, intIndex2, intObj1, intObj2, players, username);
+        game.$save();
+        $scope.success = "built road correctly";
+      }
+      else
+      {
+        $scope.error = "Cannot build road here";
+      }
+    }
+    else
+    {
+      $scope.error = "Not enough resources or roads";
     }
   }
 
