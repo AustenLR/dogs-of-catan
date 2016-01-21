@@ -115,7 +115,7 @@ function GameCtrl($scope, $location, GameFactory, GameService,
 
   var build = {
     settlement: buildSettlement,
-    // city: buildCity,
+    city: buildCity,
     // road: buildRoad
   };
 
@@ -186,6 +186,22 @@ debugger
     else
     {
       $scope.error = "Not enough resources or settlements";
+    }
+  }
+
+  function buildCity(intIndex){
+    var username = currentUser.username;
+    var players = game.players;
+    var playerRes = CardService.getPlayerRes(players, username);
+    var bankRes = game.bank.res;
+    var cardCost = CardService.cardCostMet(playerRes, "city");
+    var enoughCities = BuildService.structureCheck(players[username], "city");
+    var ownsSettlement = BuildService.ownsSettlement(players[username], intIndex);
+
+    if (cardCost && enoughCities  && ownsSettlement){
+      CardService.swapAllCards(playerRes, bankRes, cardCost);
+      PtsAndStructsService.updateTilesAndIntsOwned(null, intIndex, username, players, "city"); //dont need tiles for city
+      game.$save();
     }
   }
 

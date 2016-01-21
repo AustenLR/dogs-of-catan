@@ -296,6 +296,7 @@ function BuildService(CardService, PtsAndStructsService) {
     intersectionEmpty: intersectionEmpty,
     adjacentRoad: adjacentRoad,
     distanceRuleMet: distanceRuleMet,
+    ownsSettlement: ownsSettlement
   };
 
   return service;
@@ -342,6 +343,10 @@ function BuildService(CardService, PtsAndStructsService) {
       if (owned.indexOf(intersection) > -1) return false;
     }
     return true;
+  }
+
+  function ownsSettlement(player, intersection){ //check to confirm they own a settlement there to upgrade to city
+    return player.intersectionsOwned.hasOwnProperty(intersection);
   }
 
 }
