@@ -240,7 +240,8 @@ function CardService() {
     getPlayerDev: getPlayerDev,
     cardCostMet: cardCostMet,
     swapAllCards: swapAllCards,
-    getPlayerResources: getPlayerResources
+    getPlayerResources: getPlayerResources,
+    initThreeCards: initThreeCards
   };
 
   return service;
@@ -284,6 +285,15 @@ function CardService() {
     return players[playerName].cards.res;
   }
 
+  function initThreeCards(playerRes, bankRes, tileArray, tiles){
+    var cardsObj = tileArray.reduce(function(s,el){
+      var res = tiles[el].resource;
+      s[res]= s[res]? s[res]+1 : 1;
+      return s;
+    },{});
+    this.swapAllCards(bankRes, playerRes, cardsObj);
+  }
+
 }
 
 
@@ -297,7 +307,9 @@ function BuildService(CardService, PtsAndStructsService) {
     intersectionEmpty: intersectionEmpty,
     adjacentRoad: adjacentRoad,
     distanceRuleMet: distanceRuleMet,
-    ownsSettlement: ownsSettlement
+    ownsSettlement: ownsSettlement,
+    findTileByIntersection: findTileByIntersection,
+    roadEmpty: roadEmpty
   };
 
   return service;
@@ -357,6 +369,15 @@ function BuildService(CardService, PtsAndStructsService) {
 
   function ownsSettlement(player, intersection){ //check to confirm they own a settlement there to upgrade to city
     return player.intersectionsOwned.hasOwnProperty(intersection);
+  }
+
+  function findTileByIntersection(tiles, intIndex){
+    var tilesArray = [];
+    for (var tileKey in tiles) {
+      var tileInts = tiles[tileKey].intersections;
+      if (tileInts[intIndex]) tilesArray.push(tileKey);
+    }
+    return tilesArray;
   }
 
 }

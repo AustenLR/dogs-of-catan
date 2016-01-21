@@ -116,7 +116,9 @@ function GameCtrl($scope, $location, GameFactory, GameService,
   var build = {
     settlement: buildSettlement,
     city: buildCity,
-    road: buildRoad
+    road: buildRoad,
+    initSettlement: buildSettlementInit,
+    initRoad: buildRoadInit
   };
 
   var trade = {
@@ -155,6 +157,29 @@ function GameCtrl($scope, $location, GameFactory, GameService,
 
 
   // BUILD
+
+  function buildSettlementInit(intIndex){
+    var username = currentUser.username;
+    var players = game.players;
+    var intEmpty = BuildService.intersectionEmpty(players, intIndex);
+    var tiles = game.tiles;
+    var playerPoints = players[username].points;
+
+    if (intEmpty){
+      PtsAndStructsService.updateTilesAndIntsOwned(tiles, intIndex, username, players, "settlement");
+      if (playerPoints === 1){
+        var tilesArray = BuildService.findTileByIntersection(tiles, intIndex);
+        var playerRes = CardService.getPlayerRes(players, username);
+        var bankRes = game.bank.res;
+        CardService.initThreeCards(playerRes, bankRes, tilesArray,tiles); 
+      }
+      game.$save();
+      $scope.success = "built settlement correctly";
+    } else {
+      $scope.error = "Cannot build settlement here";
+    }
+  }
+
   function buildSettlement(intIndex) {
     var username = currentUser.username;
     var tiles = game.tiles;
@@ -237,6 +262,25 @@ function GameCtrl($scope, $location, GameFactory, GameService,
     else
     {
       $scope.error = "Not enough resources or roads";
+    }
+  }
+
+  function buildRoadInit(intIndex1, intIndex2){
+    var username = currentUser.username;
+    var players = game.players;
+    var player = players[username];
+    var ints = game.intersections;
+    var intObj1 = ints[intIndex1];
+    var intObj2 = ints[intIndex2];
+    var emptyRoad = BuildService.roadEmpty(intIndex2, intObj1);
+    var placedSettlement = (BuildService.ownsSettlement(player, intIndex1) || BuildService.ownsSettlement(player, intIndex2));
+    
+    if (emptyRoad && placedSettlement){
+      PtsAndStructsService.updateRoads(intIndex1, intIndex2, intObj1, intObj2, players, username);
+      $scope.success = "built road correctly";
+      game.$save();
+    } else{
+      $scope.error = "Cannot build road here";
     }
   }
 
