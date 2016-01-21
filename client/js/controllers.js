@@ -116,7 +116,7 @@ function GameCtrl($scope, $location, GameFactory, GameService,
   var build = {
     settlement: buildSettlement,
     city: buildCity,
-    // road: buildRoad
+    road: buildRoad
   };
 
   var trade = {
@@ -135,7 +135,7 @@ function GameCtrl($scope, $location, GameFactory, GameService,
   $scope.createMessage = createMessage;
   $scope.build = build;
   $scope.trade = trade;
-debugger
+
 
   function startGame() {
     $scope.gameStarted = true;
@@ -198,10 +198,45 @@ debugger
     var enoughCities = BuildService.structureCheck(players[username], "city");
     var ownsSettlement = BuildService.ownsSettlement(players[username], intIndex);
 
-    if (cardCost && enoughCities  && ownsSettlement){
+    if (cardCost && enoughCities && ownsSettlement){
       CardService.swapAllCards(playerRes, bankRes, cardCost);
       PtsAndStructsService.updateTilesAndIntsOwned(null, intIndex, username, players, "city"); //dont need tiles for city
       game.$save();
+    }
+    else
+    {
+      $scope.error = "Not enough resources or cities";
+    }
+  }
+
+  function buildRoad(intIndex1, intIndex2) {
+    var username = currentUser.username;
+    var ints = game.intersections;
+    var players = game.players;
+    var bankRes = game.bank.res;
+    var intObj1 = game.intersections[intIndex1];
+    var intObj2 = game.intersections[intIndex2];
+    var playerRes = CardService.getPlayerRes(players, username);
+    var cardCost = CardService.cardCostMet(playerRes, "road");
+    var enoughRoads = BuildService.structureCheck(players[username], "road");
+
+    if (cardCost && enoughRoads)
+    {
+      if (BuildService.roadCheck(intIndex1, intIndex2, intObj1, intObj2, players, username))
+      {
+        CardService.swapAllCards(playerRes, bankRes, cardCost);
+        PtsAndStructsService.updateRoads(intIndex1, intIndex2, intObj1, intObj2, players, username);
+        game.$save();
+        $scope.success = "built road correctly";
+      }
+      else
+      {
+        $scope.error = "Cannot build road here";
+      }
+    }
+    else
+    {
+      $scope.error = "Not enough resources or roads";
     }
   }
 
