@@ -55,12 +55,12 @@ var newGame = {
       "dice roll": 2,
       "robber": false, 
       "intersections": {    
-        "i0": true,        // 0: empty, 1: settlement, 2: city
-        "i1": true,
-        "i2": true,
-        "i9": true,
-        "i10": true,
-        "i11": true,
+        "i0": false,  
+        "i1": false,
+        "i2": false,
+        "i9": false,
+        "i10": false,
+        "i11": false,
         }
       },
     "t1": {                 
@@ -68,12 +68,12 @@ var newGame = {
       "dice roll": 3,
       "robber": false, 
       "intersections": {    
-        "i2": true,  
-        "i3": true,
-        "i4": true,
-        "i11": true,
-        "i12": true,
-        "i13": true,
+        "i2": false,  
+        "i3": false,
+        "i4": false,
+        "i11": false,
+        "i12": false,
+        "i13": false,
         }
       },  
     "t2": {                 
@@ -81,12 +81,12 @@ var newGame = {
       "dice roll": 3,
       "robber": false, 
       "intersections": {    
-        "i4": true,  
-        "i5": true,
-        "i6": true,
-        "i13": true,
-        "i14": true,
-        "i15": true,
+        "i4": false,  
+        "i5": false,
+        "i6": false,
+        "i13": false,
+        "i14": false,
+        "i15": false,
         }
       },  
     "t3": {                 
@@ -94,12 +94,12 @@ var newGame = {
       "dice roll": 4,
       "robber": false, 
       "intersections": {    
-        "i8": true,  
-        "i9": true,
-        "i10": true,
-        "i18": true,
-        "i19": true,
-        "i20": true,
+        "i8": false,  
+        "i9": false,
+        "i10": false,
+        "i18": false,
+        "i19": false,
+        "i20": false,
         }
       },  
     "t4": {                 
@@ -107,12 +107,12 @@ var newGame = {
       "dice roll": 4,
       "robber": false, 
       "intersections": {    
-        "i10": true,  
-        "i11": true,
-        "i12": true,
-        "i20": true,
-        "i21": true,
-        "i22": true,
+        "i10": false,  
+        "i11": false,
+        "i12": false,
+        "i20": false,
+        "i21": false,
+        "i22": false,
         }
       },  
     "t5": {                 
@@ -120,12 +120,12 @@ var newGame = {
       "dice roll": 5,
       "robber": false, 
       "intersections": {    
-        "i12": true,  
-        "i13": true,
-        "i14": true,
-        "i22": true,
-        "i23": true,
-        "i24": true,
+        "i12": false,  
+        "i13": false,
+        "i14": false,
+        "i22": false,
+        "i23": false,
+        "i24": false,
         }
       },  
     "t6": {                 
@@ -133,12 +133,12 @@ var newGame = {
       "dice roll": 5,
       "robber": false, 
       "intersections": {    
-        "i14": true,  
-        "i15": true,
-        "i16": true,
-        "i24": true,
-        "i25": true,
-        "i26": true,
+        "i14": false,  
+        "i15": false,
+        "i16": false,
+        "i24": false,
+        "i25": false,
+        "i26": false,
         }
       },  
     "t7": {                 
@@ -146,12 +146,12 @@ var newGame = {
       "dice roll": 6,
       "robber": false, 
       "intersections": {    
-        "i17": true,  
-        "i18": true,
-        "i19": true,
-        "i28": true,
-        "i29": true,
-        "i30": true,
+        "i17": false,  
+        "i18": false,
+        "i19": false,
+        "i28": false,
+        "i29": false,
+        "i30": false,
         }
       },  
     "t8": {                 
@@ -159,12 +159,12 @@ var newGame = {
       "dice roll": 6,
       "robber": false, 
       "intersections": {    
-        "i19": true,  
-        "i20": true,
-        "i21": true,
-        "i30": true,
-        "i31": true,
-        "i32": true,
+        "i19": false,  
+        "i20": false,
+        "i21": false,
+        "i30": false,
+        "i31": false,
+        "i32": false,
         }
       },  
     "t9": {                 
@@ -172,12 +172,12 @@ var newGame = {
       "dice roll": 8,
       "robber": false, 
       "intersections": {    
-        "i21": true,  
-        "i22": true,
-        "i23": true,
-        "i32": true,
-        "i33": true,
-        "i34": true,
+        "i21": false,  
+        "i22": false,
+        "i23": false,
+        "i32": false,
+        "i33": false,
+        "i34": false,
         }
       },  
     "t10": {                 
@@ -185,12 +185,12 @@ var newGame = {
       "dice roll": 8,
       "robber": false, 
       "intersections": {    
-        "i23": true,  
-        "i24": true,
-        "i25": true,
-        "i34": true,
-        "i35": true,
-        "i36": true,
+        "i23": false,  
+        "i24": false,
+        "i25": false,
+        "i34": false,
+        "i35": false,
+        "i36": false,
         }
       },  
     "t11": {                 
@@ -198,12 +198,12 @@ var newGame = {
       "dice roll": 9,
       "robber": false, 
       "intersections": {    
-        "i25": true,  
-        "i26": true,
-        "i27": true,
-        "i36": true,
-        "i37": true,
-        "i38": true,
+        "i25": false,  
+        "i26": false,
+        "i27": false,
+        "i36": false,
+        "i37": false,
+        "i38": false,
         }
       },  
     "t12": {                 
@@ -211,12 +211,12 @@ var newGame = {
       "dice roll": 9,
       "robber": false, 
       "intersections": {    
-        "i29": true,  
-        "i30": true,
-        "i31": true,
-        "i39": true,
-        "i40": true,
-        "i41": true,
+        "i29": false,  
+        "i30": false,
+        "i31": false,
+        "i39": false,
+        "i40": false,
+        "i41": false,
         }
       },  
     "t13": {                 
@@ -224,12 +224,12 @@ var newGame = {
       "dice roll": 10,
       "robber": false, 
       "intersections": {    
-        "i31": true,  
-        "i32": true,
-        "i33": true,
-        "i41": true,
-        "i42": true,
-        "i43": true,
+        "i31": false,  
+        "i32": false,
+        "i33": false,
+        "i41": false,
+        "i42": false,
+        "i43": false,
         }
       },  
     "t14": {                 
@@ -237,12 +237,12 @@ var newGame = {
       "dice roll": 10,
       "robber": false, 
       "intersections": {    
-        "i33": true,  
-        "i34": true,
-        "i35": true,
-        "i43": true,
-        "i44": true,
-        "i45": true,
+        "i33": false,  
+        "i34": false,
+        "i35": false,
+        "i43": false,
+        "i44": false,
+        "i45": false,
         }
       },  
     "t15": {                 
@@ -250,12 +250,12 @@ var newGame = {
       "dice roll": 11,
       "robber": false, 
       "intersections": {    
-        "i35": true,  
-        "i36": true,
-        "i37": true,
-        "i45": true,
-        "i46": true,
-        "i47": true,
+        "i35": false,  
+        "i36": false,
+        "i37": false,
+        "i45": false,
+        "i46": false,
+        "i47": false,
         }
       },  
     "t16": {                 
@@ -263,12 +263,12 @@ var newGame = {
       "dice roll": 11,
       "robber": false, 
       "intersections": {    
-        "i40": true,  
-        "i41": true,
-        "i42": true,
-        "i48": true,
-        "i49": true,
-        "i50": true,
+        "i40": false,  
+        "i41": false,
+        "i42": false,
+        "i48": false,
+        "i49": false,
+        "i50": false,
         }
       },  
     "t17": {                 
@@ -276,12 +276,12 @@ var newGame = {
       "dice roll": 12,
       "robber": false, 
       "intersections": {    
-        "i42": true,  
-        "i43": true,
-        "i44": true,
-        "i50": true,
-        "i51": true,
-        "i52": true,
+        "i42": false,  
+        "i43": false,
+        "i44": false,
+        "i50": false,
+        "i51": false,
+        "i52": false,
         }
       },  
     "t18": {                 
@@ -289,12 +289,12 @@ var newGame = {
       "dice roll": 7,
       "robber": false, 
       "intersections": {    
-        "i44": true,  
-        "i45": true,
-        "i46": true,
-        "i52": true,
-        "i53": true,
-        "i54": true,
+        "i44": false,  
+        "i45": false,
+        "i46": false,
+        "i52": false,
+        "i53": false,
+        "i54": false,
       },
     },
   },

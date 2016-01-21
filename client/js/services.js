@@ -6,7 +6,8 @@ function firebaseRootService(FIREBASE_URL) {
   return {
     root: root,
     games: root.child("games"),
-    messages: root.child("messages")
+    messages: root.child("messages"),
+    mainMessages: root.child("messages/main")
   };
 }
 
@@ -44,12 +45,18 @@ GameService.$inject = [
 
 app.service("CardService", CardService);
 CardService.$inject = [
-"$firebaseObject"
+
 ];
 
 app.service("BuildService", BuildService);
 BuildService.$inject = [
-"CardService"
+"CardService",
+"PtsAndStructsService"
+];
+
+app.service("PtsAndStructsService", PtsAndStructsService);
+PtsAndStructsService.$inject = [
+
 ];
 
 
@@ -106,7 +113,8 @@ function AuthService(firebaseRootService, $firebaseAuth, $firebaseObject, $windo
 // MESSAGE SERVICE
 function MessageService(firebaseRootService, $firebaseArray, AuthService) {
   var roomMessagesRef = firebaseRootService.messages;
-  var currentUser = AuthService.getCurrentUser();
+  var mainMessagesRef = firebaseRootService.mainMessages;
+  var username = AuthService.getCurrentUser().username;
   var MESSAGE_LIMIT = 25;
 
   var service = {
@@ -120,24 +128,23 @@ function MessageService(firebaseRootService, $firebaseArray, AuthService) {
 
 
   function createMessage(gameKey, currentUser, message, channel) {
-    var messagesRef = roomMessagesRef.child((channel === "main") ? "main" : gameKey);
+    var messagesRef = (channel === "main") ? mainMessagesRef : roomMessagesRef.child(gameKey);
     var firebaseMessagesArray = $firebaseArray(messagesRef);
     
     var newMessage = {};
-    newMessage.sender = currentUser.username;
+    newMessage.sender = username;
     newMessage.message = message;
     firebaseMessagesArray.$add(newMessage);
   }
 
   function getRoomMessages(gameKey) {
-    var messageRef = roomMessagesRef.child(gameKey);
-    var query = messageRef.limitToLast(MESSAGE_LIMIT);
+    var messagesRef = roomMessagesRef.child(gameKey);
+    var query = messagesRef.limitToLast(MESSAGE_LIMIT);
     return $firebaseArray(query).$loaded();
   }
 
   function getMainMessages() {
-    var messageRef = roomMessagesRef.child("main");
-    var query = messageRef.limitToLast(MESSAGE_LIMIT);
+    var query = mainMessagesRef.limitToLast(MESSAGE_LIMIT);
     return $firebaseArray(query).$loaded();
   }
 }
@@ -196,7 +203,8 @@ function GameService(firebaseRootService, $firebaseObject, AuthService, CardServ
 
   var service = {
     getGame: getGame,
-    leaveGame: leaveGame
+    leaveGame: leaveGame,
+    getCurrentTurn: getCurrentTurn
   };
 
   return service;
@@ -217,11 +225,15 @@ function GameService(firebaseRootService, $firebaseObject, AuthService, CardServ
     user.$remove();  // leave room
   }
 
+  function getCurrentTurn(game) {
+    return game.turnOrder[game.turnIndex];
+  }
+
 }
 
 
 // CARD SERVICE
-function CardService($firebaseObject) {
+function CardService() {
 
   var service = {
     getPlayerRes: getPlayerRes,
@@ -259,31 +271,11 @@ function CardService($firebaseObject) {
 
   
   function swapAllCards(fromObj, toObj, totalCost) {
-    debugger
     for (var type in totalCost) {
       var count = totalCost[type];
       fromObj[type] -= count;
       toObj[type] += count;
-      debugger
-      // swapCards(fromCardsRef, toCardsRef, type, count);
     }
-
-    // function swapCards(fromCardsRef, toCardsRef, type, count) {
-    //   var fromObj = $firebaseObject(fromCardsRef.child(type));
-    //   var toObj = $firebaseObject(toCardsRef.child(type));
-
-    //   fromObj.$loaded().then(function (fromCard) {
-    //     debugger
-    //     fromCard.$value -= count;
-    //     fromCard.$save();
-    //   });
-
-    //   toObj.$loaded().then(function (toCard) {
-    //     debugger
-    //     toCard.$value += count;
-    //     toCard.$save();
-    //   });
-    // }
   }
 
   
@@ -296,17 +288,22 @@ function CardService($firebaseObject) {
 
 
 // BUILD SERVICE
-function BuildService(CardService) {
+function BuildService(CardService, PtsAndStructsService) {
 
   var service = {
+    structureCheck: structureCheck,
     settlementCheck: settlementCheck,
     intersectionEmpty: intersectionEmpty,
     adjacentRoad: adjacentRoad,
-    distanceRuleMet: distanceRuleMet
+    distanceRuleMet: distanceRuleMet,
   };
 
   return service;
 
+
+  function structureCheck(player, structure) {
+    return player[structure] > 0;
+  }
 
   function settlementCheck(intIndex, intObj, players, username) {
     return this.intersectionEmpty(players, intIndex) &&
@@ -345,5 +342,50 @@ function BuildService(CardService) {
       if (owned.indexOf(intersection) > -1) return false;
     }
     return true;
+  }
+
+}
+
+
+// POINTS SERVICE
+function PtsAndStructsService() {
+
+  var service = {
+    updateTilesAndIntsOwned: updateTilesAndIntsOwned,
+    checkForWin: checkForWin
+  };
+
+  return service;
+
+
+  function updateTilesAndIntsOwned(tiles, intIndex, username, players, structure) {  // settlements and cities only
+    debugger
+    if (structure === "settlement")
+    {
+      for (var tileKey in tiles) {
+        var tileInts = tiles[tileKey].intersections;
+        if (tileInts[intIndex]) tileInts[intIndex] = username;
+      }
+    }
+
+    var player = players[username];
+    player.intersectionsOwned = player.intersectionsOwned || {};
+    var intsOwned = player.intersectionsOwned;
+    intsOwned[intIndex] = intsOwned[intIndex] ? 2 : 1;  // if already owned => settlement to city, if not => nothing to settlment
+
+    updatePointsAndStructs(player, structure);
+
+    function updatePointsAndStructs(player, structure) {
+      player[structure] -= 1;
+      if (structure === "city") player.settlement += 1;
+      // settlement total is +1, city total is +2 but can only be built on settlements so always +1
+      player.points += 1;
+    }
+  }
+
+  
+
+  function checkForWin(players, username) {
+    return players[username].points >= 10;
   }
 }

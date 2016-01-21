@@ -33,6 +33,7 @@ GameCtrl.$inject = [
 "MessageService",
 "BuildService",
 "CardService",
+"PtsAndStructsService",
 "game",
 "roomMessages",
 "mainMessages",
@@ -109,8 +110,8 @@ function GamesCtrl($scope, $location, GamesService, MessageService,
 }
 
 function GameCtrl($scope, $location, GameFactory, GameService,
-  MessageService, BuildService, CardService, game, roomMessages,
-  mainMessages, currentUser) {
+  MessageService, BuildService, CardService, PtsAndStructsService,
+  game, roomMessages, mainMessages, currentUser) {
 
   var build = {
     settlement: buildSettlement,
@@ -156,26 +157,35 @@ debugger
   // BUILD
   function buildSettlement(intIndex) {
     var username = currentUser.username;
-    var bankRes = game.bank.res;
+    var tiles = game.tiles;
+    var ints = game.intersections;
     var players = game.players;
+    var bankRes = game.bank.res;
     var intObj = game.intersections[intIndex];
     var playerRes = CardService.getPlayerRes(players, username);
     var cardCost = CardService.cardCostMet(playerRes, "settlement");
-    var settlementCheck = BuildService.settlementCheck(intIndex, intObj, players, username);
-    debugger
-    if (cardCost && settlementCheck)
-    {
-      debugger
-      CardService.swapAllCards(bankRes, playerRes, cardCost);
-      console.log("bank: ", game.bank);
-      console.log("player: ", game.players.a.cards.res);
-      game.$save();
-      $scope.success = "built settlement correctly";
+    var enoughSettlements = BuildService.structureCheck(players[username], "settlement");
 
+    if (cardCost && enoughSettlements)
+    {
+      if (BuildService.settlementCheck(intIndex, intObj, players, username))
+      {
+        CardService.swapAllCards(playerRes, bankRes, cardCost);
+        PtsAndStructsService.updateTilesAndIntsOwned(tiles, intIndex, username, players, "settlement");
+        game.$save();
+        if (PtsAndStructsService.checkForWin(players, username)) {
+          // win game function
+        }
+        $scope.success = "built settlement correctly";
+      }
+      else
+      {
+        $scope.error = "Cannot build settlement here";
+      }
     }
     else
     {
-      $scope.error = "Cannot build at that intersection";
+      $scope.error = "Not enough resources or settlements";
     }
   }
 
